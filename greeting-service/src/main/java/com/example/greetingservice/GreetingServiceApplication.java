@@ -10,23 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.rsocket.server.ServerRSocketFactoryProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.rsocket.EnableRSocketSecurity;
-import org.springframework.security.config.annotation.rsocket.RSocketSecurity;
-import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.rsocket.api.PayloadExchange;
-import org.springframework.security.rsocket.api.PayloadInterceptor;
-import org.springframework.security.rsocket.api.PayloadInterceptorChain;
-import org.springframework.security.rsocket.core.PayloadSocketAcceptorInterceptor;
-import org.springframework.security.rsocket.core.SecuritySocketAcceptorInterceptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -150,34 +138,6 @@ class GreetingService {
 
 }
 
-//@Profile( "rsocket-security")
-@EnableRSocketSecurity
-@Configuration
-class RSocketSecurityConfiguration {
-
-  @Bean
-  PayloadSocketAcceptorInterceptor rsocketInterceptor(RSocketSecurity rsocket) {
-    return rsocket
-        .authorizePayload(authorize ->
-            authorize
-                .route("greeting").authenticated()
-                .anyExchange().permitAll()
-        )
-        .basicAuthentication(Customizer.withDefaults())
-        .build();
-  }
-
-  @Bean
-  MapReactiveUserDetailsService userDetailsService() {
-    UserDetails user = User.withDefaultPasswordEncoder()
-        .username("user")
-        .password("user")
-        .roles("USER")
-        .build();
-    return new MapReactiveUserDetailsService(user);
-  }
-
-}
 
 @Data
 @AllArgsConstructor
