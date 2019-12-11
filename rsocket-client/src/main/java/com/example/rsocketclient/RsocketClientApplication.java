@@ -8,7 +8,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.cloud.gateway.rsocket.client.BrokerClient;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.PayloadApplicationEvent;
 import org.springframework.context.annotation.Bean;
@@ -51,17 +50,6 @@ public class RsocketClientApplication {
             .subscribe(gr -> log.info("client: " + gr.getMessage()));
   }
 
-//  @Bean
-  ApplicationListener<PayloadApplicationEvent<RSocketRequester>> gatewayClient(BrokerClient client) {
-    return event ->
-        event
-            .getPayload()
-            .route("greetings")
-            .metadata(client.forwarding("greetings-service"))
-            .data(new GreetingRequest("World"))
-            .retrieveFlux(GreetingResponse.class)
-            .subscribe(gr -> log.info("rsocket client: " + gr.getMessage()));
-  }
 }
 
 @Data
