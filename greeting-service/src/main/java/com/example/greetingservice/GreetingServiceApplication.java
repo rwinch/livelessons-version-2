@@ -36,6 +36,7 @@ import org.springframework.web.reactive.socket.WebSocketHandler;
 import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Hooks;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -50,6 +51,7 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class GreetingServiceApplication {
 
   public static void main(String[] args) {
+    Hooks.onOperatorDebug();
     SpringApplication.run(GreetingServiceApplication.class, args);
   }
 
